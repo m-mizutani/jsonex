@@ -250,7 +250,9 @@ func BenchmarkJsonex_Unmarshal_WithOptions(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(smallJSON, &result, WithMaxDepth(100), WithBufferSize(8192))
+		if err := Unmarshal(smallJSON, &result, WithMaxDepth(100), WithBufferSize(8192)); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -293,7 +295,9 @@ func BenchmarkJsonex_Unmarshal_EmptyObject(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(data, &result)
+		if err := Unmarshal(data, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -302,6 +306,8 @@ func BenchmarkJsonex_Unmarshal_EmptyArray(b *testing.B) {
 	var result []interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(data, &result)
+		if err := Unmarshal(data, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
