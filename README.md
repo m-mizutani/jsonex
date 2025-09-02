@@ -1,4 +1,4 @@
-# jsonex - Robust JSON Parser for Go
+# jsonex - Go JSON Extractor for Unclean Text
 
 [![Unit test](https://github.com/m-mizutani/jsonex/actions/workflows/test.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/test.yml)
 [![Lint](https://github.com/m-mizutani/jsonex/actions/workflows/lint.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/lint.yml)
