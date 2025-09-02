@@ -8,6 +8,8 @@
 
 A JSON parser library for Go that can extract valid JSON from noisy data streams while maintaining RFC 8259 compliance.
 
+This library is primarily designed to parse incomplete or mixed JSON responses from generative AI systems, where JSON may be embedded within explanatory text or contain surrounding noise.
+
 ## Features
 
 - **Parsing from noisy data**: Extracts the longest valid JSON object or array from data containing garbage/noise
