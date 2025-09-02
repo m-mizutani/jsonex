@@ -5,19 +5,18 @@
 [![Gosec](https://github.com/m-mizutani/jsonex/actions/workflows/gosec.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/gosec.yml)
 [![trivy](https://github.com/m-mizutani/jsonex/actions/workflows/trivy.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/trivy.yml)
 
-A robust JSON parser library for Go that can extract valid JSON from noisy data streams while maintaining full RFC 8259 compliance.
+A JSON parser library for Go that can extract valid JSON from noisy data streams while maintaining RFC 8259 compliance.
 
 ## Features
 
-- **Robust Parsing**: Extracts the longest valid JSON object or array from data containing garbage/noise
+- **Parsing from noisy data**: Extracts the longest valid JSON object or array from data containing garbage/noise
 - **RFC 8259 Compliant**: Full compliance with JSON specification including proper escape sequence handling
 - **Dual-Mode Operation**: 
   - Fast path for clean JSON using standard library
-  - Robust path for extracting JSON from noisy data
+  - Fallback path for extracting JSON from noisy data
 - **Streaming Support**: Decoder for processing multiple JSON objects from streams
 - **Unicode Support**: Full UTF-8 support including surrogate pairs
 - **Configurable**: Customizable depth limits and buffer sizes
-- **High Performance**: Competitive performance with Go's standard library
 
 ## Installation
 
@@ -155,7 +154,7 @@ This library is fully compliant with RFC 8259 (The JavaScript Object Notation Da
 
 ## Performance
 
-Benchmark results show competitive performance with Go's standard library:
+Benchmark results:
 
 ```
 BenchmarkStdLib_Unmarshal_Small-10      1310816    916.6 ns/op
@@ -163,7 +162,7 @@ BenchmarkJsonex_Unmarshal_Small-10      1264669    942.6 ns/op
 BenchmarkJsonex_Unmarshal_Robust-10      637006   1874 ns/op
 ```
 
-The library maintains excellent performance while providing robust parsing capabilities.
+Note: The robust parsing mode has additional overhead compared to the standard library due to the extra processing required for handling noisy data.
 
 ## Error Handling
 
@@ -190,7 +189,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Fuzzing
 
-This library includes comprehensive fuzzing tests to ensure robustness against various inputs.
+This library includes fuzzing tests to validate behavior against various inputs.
 
 ### Running Fuzzing Tests
 
