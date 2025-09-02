@@ -105,14 +105,14 @@ func TestEdgeCases_ExtremeCases(t *testing.T) {
 func TestEdgeCases_MultipleJSONObjects(t *testing.T) {
 	// Multiple complete JSON objects in sequence
 	input := `noise {"first": 1} middle {"second": 2} {"third": 3} end`
-	
+
 	// Should find the longest valid JSON (our implementation finds longest, not first)
 	var result map[string]interface{}
 	err := Unmarshal([]byte(input), &result)
 	if err != nil {
 		t.Fatalf("Multiple JSON objects failed: %v", err)
 	}
-	
+
 	// Should get one of the valid objects
 	if result["first"] == float64(1) || result["second"] == float64(2) || result["third"] == float64(3) {
 		// Any of these is valid

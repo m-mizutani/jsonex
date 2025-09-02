@@ -61,7 +61,7 @@ func processEscape(data []byte) ([]byte, error) {
 			if pos+5 >= len(data) {
 				return nil, newEscapeError(position{offset: pos}, "incomplete unicode escape sequence")
 			}
-			
+
 			hexStr := string(data[pos+2 : pos+6])
 			r, err := decodeUnicodeEscape(hexStr)
 			if err != nil {
@@ -73,17 +73,17 @@ func processEscape(data []byte) ([]byte, error) {
 				if pos+11 >= len(data) || data[pos+6] != '\\' || data[pos+7] != 'u' {
 					return nil, newEscapeError(position{offset: pos}, "incomplete surrogate pair")
 				}
-				
+
 				lowHexStr := string(data[pos+8 : pos+12])
 				lowR, err := decodeUnicodeEscape(lowHexStr)
 				if err != nil {
 					return nil, newEscapeError(position{offset: pos}, "invalid low surrogate: "+lowHexStr)
 				}
-				
+
 				if !isLowSurrogate(lowR) {
 					return nil, newEscapeError(position{offset: pos}, "invalid surrogate pair")
 				}
-				
+
 				// Decode surrogate pair
 				codePoint := decodeSurrogatePair(r, lowR)
 				utf8Bytes := encodeUTF8Rune(codePoint)

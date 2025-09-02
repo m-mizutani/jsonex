@@ -9,7 +9,7 @@ import (
 // Benchmark data sets
 var (
 	smallJSON = []byte(`{"name": "test", "value": 42, "active": true}`)
-	
+
 	mediumJSON = []byte(`{
 		"users": [
 			{"id": 1, "name": "Alice", "email": "alice@example.com"},
@@ -22,7 +22,7 @@ var (
 			"language": "en"
 		}
 	}`)
-	
+
 	largeJSON = []byte(`{
 		"data": [` + strings.Repeat(`{"field1": "value1", "field2": 123, "field3": true},`, 1000) + `
 			{"field1": "last", "field2": 999, "field3": false}
@@ -33,7 +33,7 @@ var (
 			"version": "1.0"
 		}
 	}`)
-	
+
 	deeplyNestedJSON = func() []byte {
 		nested := "\"value\""
 		for i := 0; i < 50; i++ {
@@ -41,7 +41,7 @@ var (
 		}
 		return []byte(nested)
 	}()
-	
+
 	// JSON with garbage prefix/suffix for robust parsing
 	robustTestJSON = []byte(`garbage text {"name": "test", "value": 42} more garbage`)
 )
@@ -232,14 +232,14 @@ func BenchmarkJsonex_Decoder_MultipleObjects(b *testing.B) {
 	input := `{"a":1} garbage {"b":2} more {"c":3}`
 	reader := strings.NewReader(input)
 	decoder := New(reader)
-	
+
 	var result map[string]interface{}
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		reader.Reset(input)
 		decoder = New(reader)
-		
+
 		// Decode multiple objects
 		for j := 0; j < 3; j++ {
 			decoder.Decode(&result)

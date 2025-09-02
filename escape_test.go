@@ -33,12 +33,12 @@ func TestProcessEscape(t *testing.T) {
 		{[]byte(`\uD83D\uDE00`), []byte("😀"), false},
 
 		// Error cases
-		{[]byte(`\`), nil, true},           // Incomplete escape
-		{[]byte(`\x`), nil, true},          // Invalid escape
-		{[]byte(`\u123`), nil, true},       // Incomplete unicode
-		{[]byte(`\uXXXX`), nil, true},      // Invalid hex
+		{[]byte(`\`), nil, true},            // Incomplete escape
+		{[]byte(`\x`), nil, true},           // Invalid escape
+		{[]byte(`\u123`), nil, true},        // Incomplete unicode
+		{[]byte(`\uXXXX`), nil, true},       // Invalid hex
 		{[]byte(`\uD83D\u1234`), nil, true}, // Invalid surrogate pair
-		{[]byte(`\uDC00`), nil, true},      // Unexpected low surrogate
+		{[]byte(`\uDC00`), nil, true},       // Unexpected low surrogate
 	}
 
 	for _, test := range tests {
@@ -66,10 +66,10 @@ func TestDecodeUnicodeEscape(t *testing.T) {
 		{"FFFF", 0xFFFF, false},
 
 		// Error cases
-		{"123", 0, true},    // Too short
-		{"12345", 0, true},  // Too long
-		{"XXXX", 0, true},   // Invalid hex
-		{"123G", 0, true},   // Invalid hex character
+		{"123", 0, true},   // Too short
+		{"12345", 0, true}, // Too long
+		{"XXXX", 0, true},  // Invalid hex
+		{"123G", 0, true},  // Invalid hex character
 	}
 
 	for _, test := range tests {
@@ -162,17 +162,17 @@ func TestValidateEscapeSequence(t *testing.T) {
 		{[]byte(`hello\nworld`), 5, false},
 
 		// Error cases
-		{[]byte(`hello`), 0, true},       // Not an escape
-		{[]byte(`\`), 0, true},           // Incomplete
-		{[]byte(`\x`), 0, true},          // Invalid escape
-		{[]byte(`\u123`), 0, true},       // Incomplete unicode
-		{[]byte(`\uXXXX`), 0, true},      // Invalid hex
+		{[]byte(`hello`), 0, true},  // Not an escape
+		{[]byte(`\`), 0, true},      // Incomplete
+		{[]byte(`\x`), 0, true},     // Invalid escape
+		{[]byte(`\u123`), 0, true},  // Incomplete unicode
+		{[]byte(`\uXXXX`), 0, true}, // Invalid hex
 	}
 
 	for _, test := range tests {
 		err := validateEscapeSequence(test.input, test.pos)
 		if (err != nil) != test.hasError {
-			t.Errorf("validateEscapeSequence(%s, %d) error = %v, expected error = %v", 
+			t.Errorf("validateEscapeSequence(%s, %d) error = %v, expected error = %v",
 				test.input, test.pos, err, test.hasError)
 		}
 	}

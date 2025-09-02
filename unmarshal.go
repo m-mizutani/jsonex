@@ -9,7 +9,7 @@ import (
 )
 
 // Unmarshal parses the JSON-encoded data and stores the result in the value pointed to by v
-// Unlike the standard json.Unmarshal, this function extracts the longest valid JSON 
+// Unlike the standard json.Unmarshal, this function extracts the longest valid JSON
 // object or array from the input data, ignoring any preceding or trailing invalid content
 func Unmarshal(data []byte, v interface{}, opts ...Option) error {
 	if len(data) == 0 {
@@ -42,7 +42,7 @@ func Unmarshal(data []byte, v interface{}, opts ...Option) error {
 	if err != nil {
 		return err
 	}
-	
+
 	// Post-process to decode escape sequences for RFC compliance
 	processEscapeSequences(v)
 	return nil
@@ -53,12 +53,12 @@ func processEscapeSequences(v interface{}) {
 	if v == nil {
 		return
 	}
-	
+
 	val := reflect.ValueOf(v)
 	if val.Kind() == reflect.Ptr {
 		val = val.Elem()
 	}
-	
+
 	switch val.Kind() {
 	case reflect.Map:
 		for _, key := range val.MapKeys() {
@@ -134,7 +134,7 @@ func decodeEscapeSequences(s string) string {
 							lowHexStr := s[i+8 : i+12]
 							if lowCodePoint, err := strconv.ParseUint(lowHexStr, 16, 16); err == nil && lowCodePoint >= 0xDC00 && lowCodePoint <= 0xDFFF {
 								// Valid surrogate pair
-								runeValue := 0x10000 + ((codePoint&0x3FF)<<10) + (lowCodePoint&0x3FF)
+								runeValue := 0x10000 + ((codePoint & 0x3FF) << 10) + (lowCodePoint & 0x3FF)
 								result.WriteRune(rune(runeValue))
 								i += 12
 								continue

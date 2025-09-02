@@ -36,7 +36,7 @@ func TestPosition_String(t *testing.T) {
 
 func TestError_Error(t *testing.T) {
 	pos := Position{Offset: 10, Line: 2, Column: 5}
-	
+
 	// Test without context
 	err := &Error{
 		Type:     ErrSyntax,
@@ -60,7 +60,7 @@ func TestError_Error(t *testing.T) {
 
 func TestNewError(t *testing.T) {
 	pos := position{offset: 5, line: 1, column: 6}
-	
+
 	err := newError(ErrSyntax, pos, "test message")
 	if err.Type != ErrSyntax {
 		t.Errorf("newError Type = %v, expected %v", err.Type, ErrSyntax)
@@ -75,7 +75,7 @@ func TestNewError(t *testing.T) {
 
 func TestNewErrorWithContext(t *testing.T) {
 	pos := position{offset: 10, line: 2, column: 1}
-	
+
 	err := newError(ErrUnicode, pos, "invalid character", "test context")
 	if err.Context != "test context" {
 		t.Errorf("newError Context = %s, expected %s", err.Context, "test context")

@@ -100,7 +100,6 @@ func (s *scanner) next() (byte, error) {
 	return b, nil
 }
 
-
 // position returns the current position
 func (s *scanner) position() position {
 	return position{

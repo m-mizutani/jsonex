@@ -96,8 +96,8 @@ func parseLongest(data []byte, opts options) ([]byte, error) {
 // isDepthError checks if an error is related to depth limits
 func isDepthError(err error) bool {
 	if jsonErr, ok := err.(*Error); ok {
-		return jsonErr.Type == ErrSyntax && 
-			   (jsonErr.Message == "maximum nesting depth exceeded")
+		return jsonErr.Type == ErrSyntax &&
+			(jsonErr.Message == "maximum nesting depth exceeded")
 	}
 	return false
 }
@@ -131,14 +131,14 @@ func (r *bytesReader) Read(p []byte) (int, error) {
 	if r.pos >= len(r.data) {
 		return 0, io.EOF
 	}
-	
+
 	n := copy(p, r.data[r.pos:])
 	r.pos += n
-	
+
 	if r.pos >= len(r.data) {
 		return n, io.EOF
 	}
-	
+
 	return n, nil
 }
 
@@ -158,13 +158,13 @@ func (p *parser) parseValue(startByte byte, buf *buffer) ([]byte, error) {
 func (p *parser) parseObject(buf *buffer) ([]byte, error) {
 	p.depth++
 	defer func() { p.depth-- }()
-	
+
 	if err := p.checkDepth(); err != nil {
 		return nil, err
 	}
 
 	buf.writeByte('{')
-	
+
 	// Consume the opening brace
 	b, err := p.scanner.next()
 	if err != nil {
@@ -200,12 +200,12 @@ func (p *parser) parseObject(buf *buffer) ([]byte, error) {
 			if err := p.scanner.skipWhitespace(); err != nil {
 				return nil, err
 			}
-			
+
 			b, err := p.scanner.next()
 			if err != nil {
 				return nil, err
 			}
-			
+
 			if b == '}' {
 				buf.writeByte('}')
 				return buf.bytes(), nil
@@ -228,13 +228,13 @@ func (p *parser) parseObject(buf *buffer) ([]byte, error) {
 func (p *parser) parseArray(buf *buffer) ([]byte, error) {
 	p.depth++
 	defer func() { p.depth-- }()
-	
+
 	if err := p.checkDepth(); err != nil {
 		return nil, err
 	}
 
 	buf.writeByte('[')
-	
+
 	// Consume the opening bracket
 	b, err := p.scanner.next()
 	if err != nil {
@@ -270,12 +270,12 @@ func (p *parser) parseArray(buf *buffer) ([]byte, error) {
 			if err := p.scanner.skipWhitespace(); err != nil {
 				return nil, err
 			}
-			
+
 			b, err := p.scanner.next()
 			if err != nil {
 				return nil, err
 			}
-			
+
 			if b == ']' {
 				buf.writeByte(']')
 				return buf.bytes(), nil
@@ -383,7 +383,7 @@ func (p *parser) parseElement(buf *buffer) error {
 // parseString parses a JSON string
 func (p *parser) parseString(buf *buffer) error {
 	buf.writeByte('"')
-	
+
 	// Consume opening quote
 	b, err := p.scanner.next()
 	if err != nil {
@@ -403,7 +403,7 @@ func (p *parser) parseString(buf *buffer) error {
 			// Check if this quote is escaped by looking backwards
 			// For robust parsing, we treat unescaped quotes as string terminators
 			// but escaped quotes as part of the string content
-			
+
 			// Simple heuristic: if we haven't seen a backslash immediately before this,
 			// treat it as string terminator. For more sophisticated parsing,
 			// we'd need to track escape state properly.
@@ -464,7 +464,7 @@ func (p *parser) parseString(buf *buffer) error {
 			if b >= 0x80 {
 				// Multi-byte UTF-8 character - need to read the complete sequence
 				sequence := []byte{b}
-				
+
 				// Determine sequence length based on first byte
 				var seqLen int
 				if b&0xE0 == 0xC0 {
@@ -476,7 +476,7 @@ func (p *parser) parseString(buf *buffer) error {
 				} else {
 					return newUnicodeError(p.scanner.position(), "invalid UTF-8 start byte")
 				}
-				
+
 				// Read remaining bytes of the sequence
 				for i := 1; i < seqLen; i++ {
 					nextByte, err := p.scanner.next()
@@ -488,7 +488,7 @@ func (p *parser) parseString(buf *buffer) error {
 					}
 					sequence = append(sequence, nextByte)
 				}
-				
+
 				// Write the complete UTF-8 sequence
 				buf.write(sequence)
 			} else {

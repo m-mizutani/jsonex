@@ -59,7 +59,7 @@ func encodeUTF8Rune(r rune) []byte {
 		// Return replacement character for invalid code points
 		return []byte{0xEF, 0xBF, 0xBD} // UTF-8 encoding of U+FFFD
 	}
-	
+
 	var buf [4]byte
 	n := utf8.EncodeRune(buf[:], r)
 	return buf[:n]
@@ -70,12 +70,12 @@ func decodeUTF8Rune(data []byte) (rune, int, error) {
 	if len(data) == 0 {
 		return 0, 0, newUnicodeError(position{}, "empty byte sequence")
 	}
-	
+
 	r, size := utf8.DecodeRune(data)
 	if r == utf8.RuneError && size == 1 {
 		return 0, 0, newUnicodeError(position{}, "invalid UTF-8 sequence")
 	}
-	
+
 	return r, size, nil
 }
 

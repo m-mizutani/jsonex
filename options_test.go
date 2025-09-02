@@ -6,7 +6,7 @@ import (
 
 func TestDefaultOptions(t *testing.T) {
 	opts := defaultOptions()
-	
+
 	if opts.maxDepth != 1000 {
 		t.Errorf("defaultOptions().maxDepth = %d, expected 1000", opts.maxDepth)
 	}
@@ -22,16 +22,16 @@ func TestWithMaxDepth(t *testing.T) {
 	}{
 		{500, 500},
 		{1, 1},
-		{0, 1000},    // Invalid value, should keep default
-		{-1, 1000},   // Invalid value, should keep default
+		{0, 1000},  // Invalid value, should keep default
+		{-1, 1000}, // Invalid value, should keep default
 	}
 
 	for _, test := range tests {
 		opts := defaultOptions()
 		WithMaxDepth(test.input)(&opts)
-		
+
 		if opts.maxDepth != test.expected {
-			t.Errorf("WithMaxDepth(%d) resulted in maxDepth = %d, expected %d", 
+			t.Errorf("WithMaxDepth(%d) resulted in maxDepth = %d, expected %d",
 				test.input, opts.maxDepth, test.expected)
 		}
 	}
@@ -44,16 +44,16 @@ func TestWithBufferSize(t *testing.T) {
 	}{
 		{8192, 8192},
 		{1024, 1024},
-		{0, 4096},    // Invalid value, should keep default
-		{-1, 4096},   // Invalid value, should keep default
+		{0, 4096},  // Invalid value, should keep default
+		{-1, 4096}, // Invalid value, should keep default
 	}
 
 	for _, test := range tests {
 		opts := defaultOptions()
 		WithBufferSize(test.input)(&opts)
-		
+
 		if opts.bufferSize != test.expected {
-			t.Errorf("WithBufferSize(%d) resulted in bufferSize = %d, expected %d", 
+			t.Errorf("WithBufferSize(%d) resulted in bufferSize = %d, expected %d",
 				test.input, opts.bufferSize, test.expected)
 		}
 	}
@@ -64,7 +64,7 @@ func TestApplyOptions(t *testing.T) {
 		WithMaxDepth(500),
 		WithBufferSize(8192),
 	)
-	
+
 	if opts.maxDepth != 500 {
 		t.Errorf("applyOptions maxDepth = %d, expected 500", opts.maxDepth)
 	}
@@ -75,7 +75,7 @@ func TestApplyOptions(t *testing.T) {
 
 func TestApplyOptionsEmpty(t *testing.T) {
 	opts := applyOptions()
-	
+
 	// Should get default values
 	if opts.maxDepth != 1000 {
 		t.Errorf("applyOptions() maxDepth = %d, expected 1000", opts.maxDepth)

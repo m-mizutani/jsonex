@@ -16,7 +16,7 @@ func optimizedUnmarshal(data []byte, v interface{}, opts options) error {
 			return nil
 		}
 	}
-	
+
 	// Fall back to robust parsing
 	return robustUnmarshal(data, v, opts)
 }
@@ -37,7 +37,7 @@ func (d *Decoder) optimizedDecode(v interface{}) error {
 		// For bytes.Reader, we can optimize
 		return d.decodeFromBytesReader(reader, v)
 	}
-	
+
 	// Fall back to robust parsing
 	return d.robustDecode(v)
 }
@@ -48,7 +48,7 @@ func (d *Decoder) decodeFromBytesReader(reader *bytes.Reader, v interface{}) err
 	remaining := make([]byte, reader.Len())
 	reader.Read(remaining)
 	reader.Seek(-int64(len(remaining)), io.SeekCurrent) // Reset position
-	
+
 	// Try fast path with standard library
 	trimmed := bytes.TrimSpace(remaining)
 	if len(trimmed) > 0 && (trimmed[0] == '{' || trimmed[0] == '[') {
@@ -60,7 +60,7 @@ func (d *Decoder) decodeFromBytesReader(reader *bytes.Reader, v interface{}) err
 			return nil
 		}
 	}
-	
+
 	// Fall back to robust parsing
 	return d.robustDecode(v)
 }
@@ -81,7 +81,7 @@ func UnmarshalOptimized(data []byte, v interface{}, opts ...Option) error {
 	if len(data) == 0 {
 		return newInvalidJSONError(position{}, "empty input data")
 	}
-	
+
 	options := applyOptions(opts...)
 	return optimizedUnmarshal(data, v, options)
 }

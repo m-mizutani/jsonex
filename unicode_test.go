@@ -31,7 +31,7 @@ func TestDecodeSurrogatePair(t *testing.T) {
 	low := rune(0xDE00)
 	result := decodeSurrogatePair(high, low)
 	expected := rune(0x1F600)
-	
+
 	if result != expected {
 		t.Errorf("decodeSurrogatePair(0x%X, 0x%X) = 0x%X, expected 0x%X", high, low, result, expected)
 	}
@@ -117,8 +117,8 @@ func TestIsValidUnicodeCodePoint(t *testing.T) {
 		expected bool
 	}{
 		{'A', true},
-		{0x1F600, true}, // Emoji
-		{-1, false},     // Negative
+		{0x1F600, true},   // Emoji
+		{-1, false},       // Negative
 		{0x110000, false}, // Too large
 		{0xD800, false},   // Surrogate
 		{0xDFFF, false},   // Surrogate
@@ -159,7 +159,7 @@ func TestDecodeUTF8Rune(t *testing.T) {
 	}{
 		{[]byte("A"), 'A', 1, false},
 		{[]byte("😀"), 0x1F600, 4, false},
-		{[]byte{}, 0, 0, true}, // Empty
+		{[]byte{}, 0, 0, true},     // Empty
 		{[]byte{0xFF}, 0, 0, true}, // Invalid UTF-8
 	}
 

@@ -14,7 +14,7 @@ func TestRFC8259_JSONStructure(t *testing.T) {
 	// array. Implementations that generate only objects or arrays where a
 	// JSON text is called for will be interoperable in the sense that all
 	// implementations will accept these as conforming JSON texts.
-	
+
 	tests := []struct {
 		name        string
 		data        []byte
@@ -51,7 +51,7 @@ func TestRFC8259_JSONStructure(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var result interface{}
 			err := Unmarshal(test.data, &result)
-			
+
 			if test.shouldParse && err != nil {
 				t.Errorf("Expected valid JSON but got error: %v", err)
 			}
@@ -65,7 +65,7 @@ func TestRFC8259_JSONStructure(t *testing.T) {
 func TestRFC8259_Objects(t *testing.T) {
 	// RFC 8259 Section 4: Objects
 	// An object is an unordered set of name/value pairs
-	
+
 	tests := []struct {
 		name string
 		data []byte
@@ -118,7 +118,7 @@ func TestRFC8259_Objects(t *testing.T) {
 func TestRFC8259_Arrays(t *testing.T) {
 	// RFC 8259 Section 5: Arrays
 	// An array is an ordered sequence of zero or more values
-	
+
 	tests := []struct {
 		name string
 		data []byte
@@ -171,7 +171,7 @@ func TestRFC8259_Values(t *testing.T) {
 	// RFC 8259 Section 3: Values
 	// A JSON value MUST be an object, array, number, or string, or one of
 	// the following three literal names: false null true
-	
+
 	tests := []struct {
 		name   string
 		data   []byte
@@ -216,7 +216,7 @@ func TestRFC8259_Values(t *testing.T) {
 func TestRFC8259_Strings(t *testing.T) {
 	// RFC 8259 Section 7: Strings
 	// A string is a sequence of Unicode code points wrapped with quotation marks
-	
+
 	tests := []struct {
 		name string
 		data []byte
@@ -277,7 +277,7 @@ func TestRFC8259_StringEscapes(t *testing.T) {
 	// All Unicode characters may be placed within the quotation marks, except
 	// for the characters that MUST be escaped: quotation mark, reverse solidus,
 	// and the control characters (U+0000 through U+001F).
-	
+
 	tests := []struct {
 		name   string
 		data   []byte
@@ -343,7 +343,7 @@ func TestRFC8259_Numbers(t *testing.T) {
 	// RFC 8259 Section 6: Numbers
 	// Numeric values that cannot be represented in the grammar below
 	// (such as Infinity and NaN) are not permitted.
-	
+
 	tests := []struct {
 		name   string
 		data   []byte
@@ -384,7 +384,7 @@ func TestRFC8259_Numbers(t *testing.T) {
 			name:   "Negative scientific",
 			data:   []byte(`{"num": -1.5E-3}`),
 			key:    "num",
-			expect: -1.5E-3,
+			expect: -1.5e-3,
 		},
 	}
 
@@ -408,7 +408,7 @@ func TestRFC8259_Numbers(t *testing.T) {
 func TestRFC8259_Literals(t *testing.T) {
 	// RFC 8259 Section 3: Literal names
 	// The literal names MUST be lowercase. No other literal names are allowed.
-	
+
 	tests := []struct {
 		name   string
 		data   []byte
@@ -454,7 +454,7 @@ func TestRFC8259_Whitespace(t *testing.T) {
 	// RFC 8259 Section 2: Insignificant whitespace
 	// Insignificant whitespace is allowed before or after any of the six
 	// structural characters: [ ] { } : ,
-	
+
 	tests := []struct {
 		name string
 		data []byte
@@ -490,7 +490,7 @@ func TestRFC8259_Whitespace(t *testing.T) {
 
 func TestRFC8259_Syntax_Violations(t *testing.T) {
 	// RFC 8259 compliance requires rejecting invalid syntax
-	
+
 	tests := []struct {
 		name        string
 		data        []byte
@@ -552,7 +552,7 @@ func TestRFC8259_Syntax_Violations(t *testing.T) {
 func TestRFC8259_Interoperability(t *testing.T) {
 	// RFC 8259 Section 8: String and Character Issues
 	// An implementation may set limits on the size of texts that it accepts
-	
+
 	tests := []struct {
 		name string
 		data []byte
@@ -586,7 +586,7 @@ func TestRFC8259_CharacterEncoding(t *testing.T) {
 	// RFC 8259 Section 8.1: Character Encoding
 	// JSON text SHALL be encoded in UTF-8, UTF-16, or UTF-32
 	// Since Go strings are UTF-8, we test UTF-8 compliance
-	
+
 	tests := []struct {
 		name string
 		data []byte
@@ -636,7 +636,7 @@ func TestRFC8259_CharacterEncoding(t *testing.T) {
 			if err != nil {
 				t.Errorf("UTF-8 JSON failed to parse (%s): %v", test.desc, err)
 			}
-			
+
 			// Verify the string was preserved correctly
 			for key, value := range result {
 				if str, ok := value.(string); ok && len(str) == 0 {
