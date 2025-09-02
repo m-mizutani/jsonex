@@ -17,6 +17,11 @@ coverage.*
 *.coverprofile
 profile.cov
 
+# Fuzzing corpus files (optional - commit important cases, ignore bulk generated files)
+testdata/fuzz/*/
+!testdata/fuzz/README.md
+!testdata/fuzz/*/seed-*
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 

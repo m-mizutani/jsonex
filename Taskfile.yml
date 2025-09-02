@@ -1,0 +1,96 @@
+version: '3'
+
+vars:
+  FUZZ_TIME: '30s'
+  FUZZ_TIME_LONG: '5m'
+
+tasks:
+  fuzz:unmarshal:
+    desc: Run fuzzing for Unmarshal function
+    cmd: go test -fuzz=FuzzUnmarshal -fuzztime={{.FUZZ_TIME}}
+
+  fuzz:decoder:
+    desc: Run fuzzing for Decoder function
+    cmd: go test -fuzz=FuzzDecoder -fuzztime={{.FUZZ_TIME}}
+
+  fuzz:unicode:
+    desc: Run fuzzing for Unicode handling
+    cmd: go test -fuzz=FuzzUnicodeHandling -fuzztime={{.FUZZ_TIME}}
+
+  fuzz:deep-nesting:
+    desc: Run fuzzing for deep nesting
+    cmd: go test -fuzz=FuzzDeepNesting -fuzztime={{.FUZZ_TIME}}
+
+  fuzz:all:
+    desc: Run all fuzzing tests
+    deps: [fuzz:unmarshal, fuzz:decoder, fuzz:unicode, fuzz:deep-nesting]
+
+  fuzz:
+    desc: Run all fuzzing tests (alias for fuzz:all)
+    deps: [fuzz:all]
+
+  fuzz:long:
+    desc: Run extended fuzzing (5 minutes each)
+    vars:
+      FUZZ_TIME: '{{.FUZZ_TIME_LONG}}'
+    deps: [fuzz:unmarshal, fuzz:decoder, fuzz:unicode, fuzz:deep-nesting]
+
+  fuzz:clean:
+    desc: Clean fuzzing corpus and cache
+    cmd: |
+      rm -rf testdata/fuzz/*/
+      go clean -fuzzcache
+
+  # Standard development tasks
+  test:
+    desc: Run all tests
+    cmd: go test ./...
+
+  test:verbose:
+    desc: Run all tests with verbose output
+    cmd: go test -v ./...
+
+  test:race:
+    desc: Run all tests with race detection
+    cmd: go test -race ./...
+
+  test:coverage:
+    desc: Run tests with coverage report
+    cmd: |
+      go test -coverprofile=coverage.out ./...
+      go tool cover -html=coverage.out -o coverage.html
+      echo "Coverage report generated: coverage.html"
+
+  benchmark:
+    desc: Run benchmark tests
+    cmd: go test -bench=. -benchmem
+
+  lint:
+    desc: Run linter
+    cmd: golangci-lint run ./...
+
+  build:
+    desc: Build the project
+    cmd: go build ./...
+
+  clean:
+    desc: Clean build artifacts and caches
+    cmd: |
+      go clean ./...
+      go clean -cache
+      go clean -testcache
+      rm -f coverage.out coverage.html
+
+  mod:
+    desc: Download and tidy dependencies
+    cmd: |
+      go mod download
+      go mod tidy
+
+  check:
+    desc: Run all checks (test, lint, build)
+    deps: [test, lint, build]
+
+  ci:
+    desc: Run CI pipeline locally
+    deps: [clean, mod, check, fuzz]
