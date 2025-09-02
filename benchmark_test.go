@@ -52,7 +52,9 @@ func BenchmarkStdLib_Unmarshal_Small(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		json.Unmarshal(smallJSON, &result)
+		if err := json.Unmarshal(smallJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -60,7 +62,9 @@ func BenchmarkStdLib_Unmarshal_Medium(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		json.Unmarshal(mediumJSON, &result)
+		if err := json.Unmarshal(mediumJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -68,7 +72,9 @@ func BenchmarkStdLib_Unmarshal_Large(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		json.Unmarshal(largeJSON, &result)
+		if err := json.Unmarshal(largeJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -85,7 +91,9 @@ func BenchmarkStdLib_Decoder_Small(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		decoder := json.NewDecoder(strings.NewReader(string(smallJSON)))
-		decoder.Decode(&result)
+		if err := decoder.Decode(&result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -94,7 +102,9 @@ func BenchmarkStdLib_Decoder_Medium(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		decoder := json.NewDecoder(strings.NewReader(string(mediumJSON)))
-		decoder.Decode(&result)
+		if err := decoder.Decode(&result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -104,7 +114,9 @@ func BenchmarkJsonex_Unmarshal_Small(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(smallJSON, &result)
+		if err := Unmarshal(smallJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -112,7 +124,9 @@ func BenchmarkJsonex_Unmarshal_Medium(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(mediumJSON, &result)
+		if err := Unmarshal(mediumJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -120,7 +134,9 @@ func BenchmarkJsonex_Unmarshal_Large(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(largeJSON, &result)
+		if err := Unmarshal(largeJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 

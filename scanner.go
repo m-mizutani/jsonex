@@ -2,7 +2,6 @@ package jsonex
 
 import (
 	"io"
-	"unicode/utf8"
 )
 
 // scanner handles low-level byte stream processing (unexported)
@@ -153,73 +152,3 @@ func (s *scanner) findJSONStart() (byte, error) {
 	}
 }
 
-// validateUTF8Byte checks if the current byte is part of a valid UTF-8 sequence
-func (s *scanner) validateUTF8Byte(b byte) error {
-	if b < 0x80 {
-		// ASCII character, always valid
-		return nil
-	}
-
-	// Multi-byte UTF-8 character
-	// Read the full sequence to validate
-	var sequence []byte
-
-	// Determine sequence length based on first byte
-	var seqLen int
-	if b&0xE0 == 0xC0 {
-		seqLen = 2
-	} else if b&0xF0 == 0xE0 {
-		seqLen = 3
-	} else if b&0xF8 == 0xF0 {
-		seqLen = 4
-	} else {
-		return newUnicodeError(s.position(), "invalid UTF-8 start byte")
-	}
-
-	// Collect the full sequence
-	sequence = append(sequence, b)
-	for i := 1; i < seqLen; i++ {
-		nextByte, err := s.peek()
-		if err != nil {
-			return newUnicodeError(s.position(), "incomplete UTF-8 sequence")
-		}
-		if nextByte&0xC0 != 0x80 {
-			return newUnicodeError(s.position(), "invalid UTF-8 continuation byte")
-		}
-		sequence = append(sequence, nextByte)
-		_, err = s.next()
-		if err != nil {
-			return err
-		}
-	}
-
-	// Validate the complete sequence
-	if !utf8.Valid(sequence) {
-		return newUnicodeError(s.position(), "invalid UTF-8 sequence")
-	}
-
-	return nil
-}
-
-// readBytes reads exactly n bytes from the current position
-func (s *scanner) readBytes(n int) ([]byte, error) {
-	result := make([]byte, 0, n)
-	for i := 0; i < n; i++ {
-		b, err := s.next()
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, b)
-	}
-	return result, nil
-}
-
-// unread moves back one position (limited capability)
-func (s *scanner) unread() {
-	if s.pos > 0 {
-		s.pos--
-		s.offset--
-		// Note: This doesn't properly handle line/column tracking
-		// Should only be used in specific cases where we know the previous character
-	}
-}
