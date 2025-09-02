@@ -1,5 +1,10 @@
 # jsonex - Robust JSON Parser for Go
 
+[![Unit test](https://github.com/m-mizutani/jsonex/actions/workflows/test.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/test.yml)
+[![Lint](https://github.com/m-mizutani/jsonex/actions/workflows/lint.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/lint.yml)
+[![Gosec](https://github.com/m-mizutani/jsonex/actions/workflows/gosec.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/gosec.yml)
+[![trivy](https://github.com/m-mizutani/jsonex/actions/workflows/trivy.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/trivy.yml)
+
 A robust JSON parser library for Go that can extract valid JSON from noisy data streams while maintaining full RFC 8259 compliance.
 
 ## Features
