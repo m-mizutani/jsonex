@@ -231,7 +231,6 @@ func BenchmarkJsonex_Unmarshal_DefaultOptions(b *testing.B) {
 func BenchmarkJsonex_Decoder_MultipleObjects(b *testing.B) {
 	input := `{"a":1} garbage {"b":2} more {"c":3}`
 	reader := strings.NewReader(input)
-	_ = New(reader)
 
 	var result map[string]interface{}
 	b.ResetTimer()

@@ -8,8 +8,8 @@ import (
 func TestNewBuffer(t *testing.T) {
 	buf := newBuffer(1024)
 
-	if buf.cap != 1024 {
-		t.Errorf("newBuffer(1024).cap = %d, expected 1024", buf.cap)
+	if cap(buf.data) != 1024 {
+		t.Errorf("newBuffer(1024) capacity = %d, expected 1024", cap(buf.data))
 	}
 	if buf.len() != 0 {
 		t.Errorf("newBuffer(1024).len() = %d, expected 0", buf.len())

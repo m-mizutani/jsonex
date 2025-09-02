@@ -7,7 +7,6 @@ import (
 // buffer represents an internal byte buffer (unexported)
 type buffer struct {
 	data []byte
-	cap  int
 	pos  int
 }
 
@@ -15,7 +14,6 @@ type buffer struct {
 func newBuffer(capacity int) *buffer {
 	return &buffer{
 		data: make([]byte, 0, capacity),
-		cap:  capacity,
 		pos:  0,
 	}
 }

@@ -492,12 +492,8 @@ func (p *parser) parseString(buf *buffer) error {
 				// Write the complete UTF-8 sequence
 				buf.write(sequence)
 			} else {
-				// ASCII character - handle control characters and unescaped quotes
-				if b == '"' {
-					// Unescaped quote - escape it for valid JSON
-					buf.writeByte('\\')
-					buf.writeByte('"')
-				} else if b < 0x20 {
+				// ASCII character - handle control characters
+				if b < 0x20 {
 					// Control character - convert to escape sequence
 					switch b {
 					case '\n':
