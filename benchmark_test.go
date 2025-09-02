@@ -82,7 +82,9 @@ func BenchmarkStdLib_Unmarshal_DeepNested(b *testing.B) {
 	var result interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		json.Unmarshal(deeplyNestedJSON, &result)
+		if err := json.Unmarshal(deeplyNestedJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -144,7 +146,9 @@ func BenchmarkJsonex_Unmarshal_DeepNested(b *testing.B) {
 	var result interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(deeplyNestedJSON, &result)
+		if err := Unmarshal(deeplyNestedJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -152,7 +156,9 @@ func BenchmarkJsonex_Unmarshal_Robust(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(robustTestJSON, &result)
+		if err := Unmarshal(robustTestJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -161,7 +167,9 @@ func BenchmarkJsonex_Decoder_Small(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		decoder := New(strings.NewReader(string(smallJSON)))
-		decoder.Decode(&result)
+		if err := decoder.Decode(&result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -170,7 +178,9 @@ func BenchmarkJsonex_Decoder_Medium(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		decoder := New(strings.NewReader(string(mediumJSON)))
-		decoder.Decode(&result)
+		if err := decoder.Decode(&result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -180,7 +190,9 @@ func BenchmarkJsonex_Decoder_Robust(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		decoder := New(strings.NewReader(robustInput))
-		decoder.Decode(&result)
+		if err := decoder.Decode(&result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -191,7 +203,9 @@ func BenchmarkJsonex_Unmarshal_Small_Allocs(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(smallJSON, &result)
+		if err := Unmarshal(smallJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -200,7 +214,9 @@ func BenchmarkStdLib_Unmarshal_Small_Allocs(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		json.Unmarshal(smallJSON, &result)
+		if err := json.Unmarshal(smallJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -210,7 +226,9 @@ func BenchmarkJsonex_Unmarshal_Concurrent(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		var result map[string]interface{}
 		for pb.Next() {
-			Unmarshal(smallJSON, &result)
+			if err := Unmarshal(smallJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 		}
 	})
 }
@@ -219,7 +237,9 @@ func BenchmarkStdLib_Unmarshal_Concurrent(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		var result map[string]interface{}
 		for pb.Next() {
-			json.Unmarshal(smallJSON, &result)
+			if err := json.Unmarshal(smallJSON, &result); err != nil {
+				b.Fatal(err)
+			}
 		}
 	})
 }
@@ -238,7 +258,9 @@ func BenchmarkJsonex_Unmarshal_DefaultOptions(b *testing.B) {
 	var result map[string]interface{}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Unmarshal(smallJSON, &result)
+		if err := Unmarshal(smallJSON, &result); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -257,7 +279,9 @@ func BenchmarkJsonex_Decoder_MultipleObjects(b *testing.B) {
 
 		// Decode multiple objects
 		for range 3 {
-			decoder.Decode(&result)
+			if err := decoder.Decode(&result); err != nil {
+				b.Fatal(err)
+			}
 		}
 	}
 }
