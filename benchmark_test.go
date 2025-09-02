@@ -241,7 +241,7 @@ func BenchmarkJsonex_Decoder_MultipleObjects(b *testing.B) {
 		decoder = New(reader)
 
 		// Decode multiple objects
-		for j := 0; j < 3; j++ {
+		for range 3 {
 			decoder.Decode(&result)
 		}
 	}
