@@ -286,37 +286,37 @@ func TestRFC8259_StringEscapes(t *testing.T) {
 	}{
 		{
 			name:   "Escaped quote",
-			data:   []byte(`garbage {"quote": "He said \\\"Hello\\\""} trash`),
+			data:   []byte(`garbage {"quote": "He said \"Hello\""} trash`),
 			key:    "quote",
 			expect: `He said "Hello"`,
 		},
 		{
 			name:   "Escaped backslash",
-			data:   []byte(`prefix {"path": "C:\\\\\\\\Program Files"} suffix`),
+			data:   []byte(`prefix {"path": "C:\\\\Program Files"} suffix`),
 			key:    "path",
 			expect: `C:\\Program Files`,
 		},
 		{
 			name:   "Escaped newline",
-			data:   []byte(`noise {"text": "line1\\nline2"} end`),
+			data:   []byte("noise {\"text\": \"line1\\nline2\"} end"),
 			key:    "text",
 			expect: "line1\nline2",
 		},
 		{
 			name:   "Escaped tab",
-			data:   []byte(`start {"text": "col1\\tcol2"} finish`),
+			data:   []byte("start {\"text\": \"col1\\tcol2\"} finish"),
 			key:    "text",
 			expect: "col1\tcol2",
 		},
 		{
 			name:   "Unicode escape",
-			data:   []byte(`begin {"unicode": "\\u0041\\u0042"} done`),
+			data:   []byte(`begin {"unicode": "\u0041\u0042"} done`),
 			key:    "unicode",
 			expect: "AB",
 		},
 		{
 			name:   "Surrogate pair",
-			data:   []byte(`junk {"emoji": "\\uD83D\\uDE00"} more`),
+			data:   []byte(`junk {"emoji": "\uD83D\uDE00"} more`),
 			key:    "emoji",
 			expect: "😀",
 		},

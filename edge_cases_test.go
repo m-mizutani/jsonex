@@ -36,14 +36,15 @@ func TestEdgeCases_EscapeSequences(t *testing.T) {
 		t.Fatalf("Escape sequences failed: %v", err)
 	}
 
-	// RFC 8259 compliant implementation decodes escape sequences
-	if result["backslash"] != "\\" {
+	// RFC 8259 compliant implementation decodes escape sequences correctly
+	// Note: "\\\\" in JSON represents two backslash characters, not one
+	if result["backslash"] != "\\\\" {
 		t.Errorf("Backslash escape incorrect: %v", result["backslash"])
 	}
-	if result["quote"] != "\"" {
+	if result["quote"] != "\\\"" {
 		t.Errorf("Quote escape incorrect: %q", result["quote"])
 	}
-	if result["newline"] != "\n" {
+	if result["newline"] != "\\n" {
 		t.Errorf("Newline escape incorrect: %q", result["newline"])
 	}
 }
@@ -107,7 +108,7 @@ func TestEdgeCases_JSONLikeStrings(t *testing.T) {
 			name: "JSON-like content in string",
 			data: []byte(`garbage {"description": "This contains {\\\"fake\\\": \\\"json\\\"} inside"} noise`),
 			expected: map[string]interface{}{
-				"description": "This contains {\"fake\": \"json\"} inside",
+				"description": "This contains {\\\"fake\\\": \\\"json\\\"} inside",
 			},
 			desc: "String field containing escaped JSON-like content",
 		},
@@ -131,7 +132,7 @@ func TestEdgeCases_JSONLikeStrings(t *testing.T) {
 			name: "Complex nested false JSON",
 			data: []byte(`noise {"config": "Settings: {\\\"theme\\\": \\\"dark\\\", \\\"size\\\": 12}"} trash`),
 			expected: map[string]interface{}{
-				"config": "Settings: {\"theme\": \"dark\", \"size\": 12}",
+				"config": "Settings: {\\\"theme\\\": \\\"dark\\\", \\\"size\\\": 12}",
 			},
 			desc: "String containing properly escaped JSON-like configuration",
 		},
@@ -147,7 +148,7 @@ func TestEdgeCases_JSONLikeStrings(t *testing.T) {
 			name: "Mixed quotes and braces",
 			data: []byte(`junk {"note": "Use \\\"quotes\\\" around {objects} in JSON"} end`),
 			expected: map[string]interface{}{
-				"note": "Use \"quotes\" around {objects} in JSON",
+				"note": "Use \\\"quotes\\\" around {objects} in JSON",
 			},
 			desc: "String with mixed quotes and object notation",
 		},
