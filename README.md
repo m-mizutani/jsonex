@@ -188,6 +188,59 @@ if err := jsonex.Unmarshal(data, &result); err != nil {
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+## Fuzzing
+
+This library includes comprehensive fuzzing tests to ensure robustness against various inputs.
+
+### Running Fuzzing Tests
+
+#### Using Task Runner (Recommended)
+
+```bash
+# Install Task runner first: https://taskfile.dev/installation/
+
+# Run all fuzzing tests
+task fuzz
+
+# Run individual fuzzing tests
+task fuzz:unmarshal      # Test Unmarshal function
+task fuzz:decoder        # Test Decoder function  
+task fuzz:unicode        # Test Unicode handling
+task fuzz:deep-nesting   # Test deep nesting structures
+
+# Run extended fuzzing (5 minutes each)
+task fuzz:long
+
+# Clean fuzzing corpus and cache
+task fuzz:clean
+```
+
+#### Using Go Commands Directly
+
+```bash
+# Run individual fuzz tests
+go test -fuzz=FuzzUnmarshal -fuzztime=30s
+go test -fuzz=FuzzDecoder -fuzztime=30s
+go test -fuzz=FuzzUnicodeHandling -fuzztime=30s
+go test -fuzz=FuzzDeepNesting -fuzztime=30s
+
+# Run for longer duration
+go test -fuzz=FuzzUnmarshal -fuzztime=5m
+```
+
+### Fuzzing Coverage
+
+The fuzzing tests cover:
+
+- **Unmarshal Function**: Various JSON inputs including malformed data, edge cases, and robust parsing scenarios
+- **Decoder Function**: Streaming JSON processing with multiple objects and incomplete data
+- **Unicode Handling**: UTF-8 validation, escape sequences, surrogate pairs, and invalid sequences
+- **Deep Nesting**: Extremely nested structures to test stack limits and memory usage
+
+### Fuzzing Corpus
+
+Fuzzing corpus files are stored in `testdata/fuzz/` and include automatically generated test cases that increase code coverage. The corpus is managed automatically but can be cleaned with `task fuzz:clean`.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

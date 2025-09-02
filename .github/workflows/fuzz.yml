@@ -1,0 +1,114 @@
+name: Fuzzing
+
+on:
+  push:
+    paths:
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'Taskfile.yml'
+      - '.github/workflows/fuzz.yml'
+  pull_request:
+    paths:
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'Taskfile.yml'
+      - '.github/workflows/fuzz.yml'
+  schedule:
+    # Run fuzzing nightly at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: 'Fuzzing duration for each test'
+        required: false
+        default: '2m'
+        type: choice
+        options:
+          - '30s'
+          - '1m'
+          - '2m'
+          - '5m'
+          - '10m'
+
+jobs:
+  fuzzing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout upstream repo
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+          cache: true
+          cache-dependency-path: go.sum
+
+      # Cache Go modules for faster dependency resolution
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # Install Task runner
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Create testdata directory structure
+      - name: Create testdata directory
+        run: mkdir -p testdata/fuzz
+
+      # Run fuzzing with short duration for CI
+      - name: Run fuzzing tests (scheduled/manual)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        env:
+          FUZZ_TIME: ${{ github.event.inputs.duration || '2m' }}
+        run: |
+          echo "Running fuzzing with duration: $FUZZ_TIME"
+          task fuzz:unmarshal
+          task fuzz:decoder
+          task fuzz:unicode
+          task fuzz:deep-nesting
+
+      # Run shorter fuzzing for PR/push events
+      - name: Run fuzzing tests (PR/push)
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        env:
+          FUZZ_TIME: '15s'
+        run: |
+          echo "Running quick fuzzing for PR/push"
+          task fuzz:all
+
+      # Archive any interesting test cases found during fuzzing
+      - name: Archive fuzzing corpus
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-corpus-${{ github.sha }}
+          path: testdata/fuzz/
+          retention-days: 30
+          if-no-files-found: ignore
+
+      # Run regular tests to ensure fuzzing didn't break anything
+      - name: Run unit tests
+        run: go test ./...
+
+      # Check that the fuzzing tests can be compiled and executed
+      - name: Verify fuzz tests compile
+        run: |
+          echo "Verifying fuzz test compilation..."
+          go test -list=Fuzz
+          echo "Fuzz tests found:"
+          go test -list=Fuzz | grep "^Fuzz"
