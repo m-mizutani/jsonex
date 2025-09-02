@@ -4,6 +4,7 @@
 [![Lint](https://github.com/m-mizutani/jsonex/actions/workflows/lint.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/lint.yml)
 [![Gosec](https://github.com/m-mizutani/jsonex/actions/workflows/gosec.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/gosec.yml)
 [![trivy](https://github.com/m-mizutani/jsonex/actions/workflows/trivy.yml/badge.svg)](https://github.com/m-mizutani/jsonex/actions/workflows/trivy.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/m-mizutani/jsonex.svg)](https://pkg.go.dev/github.com/m-mizutani/jsonex)
 
 A JSON parser library for Go that can extract valid JSON from noisy data streams while maintaining RFC 8259 compliance.
 
