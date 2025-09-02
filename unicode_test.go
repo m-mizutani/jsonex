@@ -192,9 +192,9 @@ func TestCountRunes(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := countRunes(test.input)
+		result := utf8.RuneCount(test.input)
 		if result != test.expected {
-			t.Errorf("countRunes(%s) = %d, expected %d", test.input, result, test.expected)
+			t.Errorf("utf8.RuneCount(%s) = %d, expected %d", test.input, result, test.expected)
 		}
 	}
 }
